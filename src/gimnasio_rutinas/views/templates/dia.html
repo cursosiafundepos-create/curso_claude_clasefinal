@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}{{ dia_label }} · Rutinas de gimnasio{% endblock %}
+{% block content %}
+  <p><a href="{{ url_for('rutinas.ver_semana') }}">&larr; Volver a la semana</a></p>
+  <h1>{{ dia_label }}</h1>
+
+  {% if ejercicios %}
+    {% for e in ejercicios %}
+      <form id="editar-{{ e.id }}" method="post" action="{{ url_for('rutinas.editar_ejercicio', dia=dia, ejercicio_id=e.id) }}"></form>
+      <form id="mover-arriba-{{ e.id }}" method="post" action="{{ url_for('rutinas.mover_ejercicio', dia=dia, ejercicio_id=e.id) }}">
+        <input type="hidden" name="direccion" value="arriba">
+      </form>
+      <form id="mover-abajo-{{ e.id }}" method="post" action="{{ url_for('rutinas.mover_ejercicio', dia=dia, ejercicio_id=e.id) }}">
+        <input type="hidden" name="direccion" value="abajo">
+      </form>
+      <form id="eliminar-{{ e.id }}" method="post" action="{{ url_for('rutinas.eliminar_ejercicio', dia=dia, ejercicio_id=e.id) }}"></form>
+    {% endfor %}
+
+    <table class="tabla-ejercicios">
+      <thead>
+        <tr>
+          <th>Ejercicio</th>
+          <th>Series</th>
+          <th>Reps</th>
+          <th>Peso</th>
+          <th>Notas</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in ejercicios %}
+        <tr>
+          <td><input form="editar-{{ e.id }}" type="text" name="nombre" value="{{ e.nombre }}" required></td>
+          <td><input form="editar-{{ e.id }}" type="number" name="series" value="{{ e.series }}" min="1" required></td>
+          <td><input form="editar-{{ e.id }}" type="text" name="repeticiones" value="{{ e.repeticiones }}" required></td>
+          <td><input form="editar-{{ e.id }}" type="text" name="peso" value="{{ e.peso }}"></td>
+          <td><input form="editar-{{ e.id }}" type="text" name="notas" value="{{ e.notas }}"></td>
+          <td class="acciones">
+            <button form="editar-{{ e.id }}" type="submit">Guardar</button>
+            <button form="mover-arriba-{{ e.id }}" type="submit" title="Subir">↑</button>
+            <button form="mover-abajo-{{ e.id }}" type="submit" title="Bajar">↓</button>
+            <button form="eliminar-{{ e.id }}" type="submit" class="peligro" title="Eliminar">✕</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="sin-rutina">Sin rutina definida todavía para este día.</p>
+  {% endif %}
+
+  <h2>Agregar ejercicio</h2>
+  <form method="post" action="{{ url_for('rutinas.agregar_ejercicio', dia=dia) }}" class="form-nuevo">
+    <input type="text" name="nombre" placeholder="Nombre" required>
+    <input type="number" name="series" placeholder="Series" min="1" required>
+    <input type="text" name="repeticiones" placeholder="Repeticiones (ej. 8-12)" required>
+    <input type="text" name="peso" placeholder="Peso (opcional)">
+    <input type="text" name="notas" placeholder="Notas (opcional)">
+    <button type="submit">Agregar</button>
+  </form>
+{% endblock %}
