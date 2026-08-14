@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Progreso · Rutinas de gimnasio{% endblock %}
+{% block content %}
+  <h1>Progreso</h1>
+  <p class="subtitle">Registrá tus entrenamientos reales para ver la evolución de cada ejercicio.</p>
+
+  <h2>Registrar entrenamiento</h2>
+  <form method="post" action="{{ url_for('progreso.registrar_entrenamiento') }}" class="form-nuevo">
+    <input type="date" name="fecha" required>
+    <input type="text" name="ejercicio" placeholder="Ejercicio" required>
+    <input type="number" name="series" placeholder="Series" min="1" required>
+    <input type="number" name="repeticiones" placeholder="Repeticiones" min="1" required>
+    <input type="number" name="peso" placeholder="Peso (kg, opcional)" step="0.5" min="0">
+    <button type="submit">Registrar</button>
+  </form>
+
+  <h2>Ejercicios registrados</h2>
+  {% if ejercicios %}
+    <ul class="mini-lista">
+      {% for ejercicio in ejercicios %}
+        <li><a href="{{ url_for('progreso.ver_progreso_ejercicio', ejercicio=ejercicio) }}">{{ ejercicio }}</a></li>
+      {% endfor %}
+    </ul>
+    {% if not es_premium %}
+      <p class="sin-rutina">Los gráficos de progreso requieren el plan Premium. <a href="{{ url_for('suscripcion.ver_suscripcion') }}">Ver suscripción</a>.</p>
+    {% endif %}
+  {% else %}
+    <p class="sin-rutina">Todavía no registraste ningún entrenamiento.</p>
+  {% endif %}
+{% endblock %}

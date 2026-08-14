@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Suscripción · Rutinas de gimnasio{% endblock %}
+{% block content %}
+  <h1>Suscripción</h1>
+  <p class="subtitle">Plan actual: <strong>{{ suscripcion.plan | capitalize }}</strong></p>
+
+  {% if suscripcion.plan == "free" %}
+    <p>Con el plan Free no tenés acceso a los gráficos de progreso de ejercicios.</p>
+    <form method="post" action="{{ url_for('suscripcion.cambiar_plan') }}">
+      <input type="hidden" name="plan" value="premium">
+      <button type="submit">Actualizar a Premium</button>
+    </form>
+  {% else %}
+    <p>Con el plan Premium tenés acceso a los gráficos de progreso de ejercicios.</p>
+    <form method="post" action="{{ url_for('suscripcion.cambiar_plan') }}">
+      <input type="hidden" name="plan" value="free">
+      <button type="submit" class="peligro">Volver a Free</button>
+    </form>
+  {% endif %}
+{% endblock %}

@@ -12,6 +12,12 @@
 <body>
   <header class="topbar">
     <a class="brand" href="{{ url_for('rutinas.ver_semana') }}">🏋️ Rutinas de gimnasio</a>
+    <nav class="nav">
+      <a href="{{ url_for('rutinas.ver_semana') }}">Semana</a>
+      <a href="{{ url_for('progreso.ver_progreso') }}">Progreso</a>
+      <a href="{{ url_for('comidas.ver_comidas') }}">Comidas</a>
+      <a href="{{ url_for('suscripcion.ver_suscripcion') }}">Suscripción</a>
+    </nav>
   </header>
   <main class="container">
     {% block content %}{% endblock %}

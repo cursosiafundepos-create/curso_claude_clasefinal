@@ -1,7 +1,7 @@
 # Spec 003: Gráficos de progreso, comidas y suscripciones
 
 ## Estado
-Borrador.
+Implementada — cerrada.
 
 ## Resumen
 Se agregan tres áreas nuevas a la app de gimnasio ([[001-rutinas-gimnasio-semanales]]):
