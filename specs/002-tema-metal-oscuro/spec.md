@@ -1,7 +1,7 @@
 # Spec 002: Tema visual "metal" (fondo negro, detalles amarillos, tipografía metal)
 
 ## Estado
-Implementada — cerrada.
+Implementada — cerrada. Ver [[#Adenda: tipografía gym y fondo con vectores]] para el ajuste posterior.
 
 ## Resumen
 Reemplazar la apariencia visual actual de la app de rutinas de gimnasio ([[001-rutinas-gimnasio-semanales]]) por un tema oscuro estilo "metal": fondo negro, detalles/acentos en amarillo, y tipografía con look de banda de heavy metal para los títulos.
@@ -44,3 +44,26 @@ No aplica (spec puramente visual, sin cambios de comportamiento).
 - Los botones de acción (Agregar, Guardar) tienen el acento amarillo definido; el botón eliminar sigue siendo distinguible en rojo.
 - El texto de las tablas de ejercicios (inputs, notas) sigue siendo legible en fuente de sistema, no en la fuente metal.
 - La app sigue siendo completamente funcional (agregar/editar/mover/eliminar ejercicios) — este cambio no altera ningún comportamiento, solo estilos.
+
+## Adenda: tipografía gym y fondo con vectores
+
+### Motivación
+El usuario pidió la tipografía "BaBaku Gym" (dafont.com) para reforzar la identidad de gimnasio, y vectores de fondo tipo pesas/máquinas en tonos amarillos.
+
+### Decisión de tipografía
+No se usa "BaBaku Gym": es un archivo de fuente de un sitio de terceros con licencia por-fuente no verificada (típicamente "solo uso personal"), y commitearlo al repo público implicaría redistribuir un archivo con copyright ajeno sin licencia confirmada. En su lugar se usa **Anton** (Google Fonts, licencia SIL Open Font License, embebible libremente), una fuente sans condensada/bold de estética muy usada en branding deportivo/gym. Reemplaza a "Metal Mania" como `--font-gym` (antes `--font-metal`) para `h1`, `h2` y `.brand`.
+
+Si en el futuro se quiere usar específicamente "BaBaku Gym" u otra fuente de dafont: el usuario debe descargar el archivo verificando que la licencia permita el uso previsto, colocarlo en el proyecto, y desde ahí se conecta vía `@font-face` — no se descarga/commitea automáticamente por licencia desconocida.
+
+### Decisión de vectores de fondo
+No se usan vectores de bancos de imágenes (Freepik y similares) por la misma razón de licencia de redistribución. En su lugar se dibuja un ícono SVG propio de una barra con discos (barbell), embebido inline como `data:image/svg+xml` en `body::before`, repetido en mosaico a baja opacidad (`0.05`) en color acento (`#f5c400`), como capa de fondo (`z-index: -1`, `pointer-events: none`) detrás de todo el contenido.
+
+### Requisitos no funcionales (adenda)
+1. La opacidad del patrón de fondo debe ser suficientemente baja para no afectar el contraste WCAG AA del texto sobre fondo (los contenedores con fondo sólido —tarjetas, tablas— cubren el patrón; solo es visible sobre el negro base).
+2. El patrón de fondo no debe interferir con la interacción (clicks, foco de inputs): `pointer-events: none`.
+3. Igual que la fuente metal original, si Google Fonts no carga, el fallback (`"Impact", "Arial Narrow", sans-serif`) mantiene el look bold/condensado.
+
+### Criterios de aceptación (adenda)
+- Los títulos (`h1`, `h2`) y el nombre de marca se ven en la tipografía Anton (bold condensada), no en Metal Mania.
+- El fondo negro de la app muestra un patrón sutil y repetido de barras con discos en amarillo, visible pero sin interferir con la lectura del contenido.
+- Las tarjetas y tablas (con fondo sólido `--card`) no muestran el patrón por encima del texto.
