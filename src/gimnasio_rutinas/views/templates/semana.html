@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Semana · Rutinas de gimnasio{% endblock %}
+{% block content %}
+  <h1>Semana</h1>
+  <p class="subtitle">Rutina fija de lunes a viernes. Sábado y domingo son descanso.</p>
+  <div class="grid-semana">
+    {% for dia in dias %}
+      {% set ejercicios = semana[dia] %}
+      <a class="card-dia" href="{{ url_for('rutinas.ver_dia', dia=dia) }}">
+        <h2>{{ dias_label[dia] }}</h2>
+        {% if ejercicios %}
+          <ul class="mini-lista">
+            {% for e in ejercicios %}
+              <li>{{ e.nombre }} — {{ e.series }}x{{ e.repeticiones }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="sin-rutina">Sin rutina definida</p>
+        {% endif %}
+      </a>
+    {% endfor %}
+  </div>
+{% endblock %}
