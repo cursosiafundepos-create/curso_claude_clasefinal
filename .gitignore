@@ -2,3 +2,6 @@
 __pycache__/
 *.pyc
 data/rutinas.json
+data/entrenamientos.json
+data/comidas.json
+data/suscripcion.json

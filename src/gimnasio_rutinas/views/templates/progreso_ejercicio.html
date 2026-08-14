@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ ejercicio }} · Progreso{% endblock %}
+{% block content %}
+  <p><a href="{{ url_for('progreso.ver_progreso') }}">&larr; Volver a progreso</a></p>
+  <h1>{{ ejercicio }}</h1>
+
+  {% if not es_premium %}
+    <p class="sin-rutina">Este gráfico requiere el plan Premium. <a href="{{ url_for('suscripcion.ver_suscripcion') }}">Actualizar plan</a>.</p>
+  {% elif not historial %}
+    <p class="sin-rutina">Sin datos todavía para este ejercicio.</p>
+  {% else %}
+    <svg id="grafico-progreso" class="grafico" viewBox="0 0 600 300" preserveAspectRatio="none"></svg>
+    <script>
+      window.datosProgreso = [
+        {% for r in historial %}
+        {fecha: {{ r.fecha | tojson }}, peso: {{ r.peso }}},
+        {% endfor %}
+      ];
+    </script>
+    <script src="{{ url_for('static', filename='grafico.js') }}"></script>
+
+    <table class="tabla-ejercicios">
+      <thead>
+        <tr><th>Fecha</th><th>Peso</th><th>Series</th><th>Reps</th></tr>
+      </thead>
+      <tbody>
+        {% for r in historial %}
+        <tr><td>{{ r.fecha }}</td><td>{{ r.peso }}</td><td>{{ r.series }}</td><td>{{ r.repeticiones }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Comidas · Rutinas de gimnasio{% endblock %}
+{% block content %}
+  <h1>Comidas</h1>
+  <form method="get" action="{{ url_for('comidas.ver_comidas') }}" class="form-nuevo">
+    <input type="date" name="fecha" value="{{ fecha }}" onchange="this.form.submit()">
+  </form>
+
+  {% if comidas %}
+    {% for c in comidas %}
+      <form id="eliminar-{{ c.id }}" method="post" action="{{ url_for('comidas.eliminar_comida', comida_id=c.id) }}">
+        <input type="hidden" name="fecha" value="{{ fecha }}">
+      </form>
+    {% endfor %}
+    <table class="tabla-ejercicios">
+      <thead>
+        <tr><th>Tipo</th><th>Nombre</th><th>Cal</th><th>Prot (g)</th><th>Carb (g)</th><th>Grasas (g)</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for c in comidas %}
+        <tr>
+          <td>{{ tipos_label[c.tipo] }}</td>
+          <td>{{ c.nombre }}</td>
+          <td>{{ c.calorias }}</td>
+          <td>{{ c.proteinas_g }}</td>
+          <td>{{ c.carbohidratos_g }}</td>
+          <td>{{ c.grasas_g }}</td>
+          <td class="acciones">
+            <button form="eliminar-{{ c.id }}" type="submit" class="peligro" title="Eliminar">✕</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2"><strong>Total</strong></td>
+          <td><strong>{{ totales.calorias }}</strong></td>
+          <td><strong>{{ totales.proteinas_g }}</strong></td>
+          <td><strong>{{ totales.carbohidratos_g }}</strong></td>
+          <td><strong>{{ totales.grasas_g }}</strong></td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  {% else %}
+    <p class="sin-rutina">Sin comidas registradas para este día.</p>
+  {% endif %}
+
+  <h2>Agregar comida</h2>
+  <form method="post" action="{{ url_for('comidas.agregar_comida') }}" class="form-nuevo">
+    <input type="hidden" name="fecha" value="{{ fecha }}">
+    <select name="tipo" required>
+      <option value="desayuno">Desayuno</option>
+      <option value="almuerzo">Almuerzo</option>
+      <option value="cena">Cena</option>
+      <option value="snack">Snack</option>
+    </select>
+    <input type="text" name="nombre" placeholder="Nombre" required>
+    <input type="number" name="calorias" placeholder="Calorías" min="0" required>
+    <input type="number" name="proteinas_g" placeholder="Proteínas (g)" min="0" step="0.1">
+    <input type="number" name="carbohidratos_g" placeholder="Carbohidratos (g)" min="0" step="0.1">
+    <input type="number" name="grasas_g" placeholder="Grasas (g)" min="0" step="0.1">
+    <button type="submit">Agregar</button>
+  </form>
+{% endblock %}
